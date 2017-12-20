@@ -10,14 +10,15 @@ import br.com.disapps.homepet.ui.map.MapPresenter
 import br.com.disapps.homepet.ui.profile.ProfilePresenter
 import br.com.disapps.homepet.ui.profile.edit.EditProfilePresenter
 import br.com.disapps.homepet.ui.signup.SignupPresenter
-import org.koin.android.module.AndroidModule
+import org.koin.dsl.module.Module
+import org.koin.dsl.module.applicationContext
 
 /**
  * Created by diefferson on 19/12/2017.
  */
-class  PresenterModule : AndroidModule(){
+object  PresenterModule{
 
-    override fun context() = applicationContext{
+    val module : Module = applicationContext{
         provide { CommentsPresenter(get()) }
         provide { HotelDetailsPresenter(get(), get(), get()) }
         provide { HotelPresenter(get()) }
@@ -28,7 +29,6 @@ class  PresenterModule : AndroidModule(){
         provide { MapPresenter(get()) }
         provide { EditProfilePresenter(get(), get()) }
         provide { SignupPresenter(get(), get()) }
-
     }
 
 }

@@ -56,6 +56,6 @@ ext{
     rxAndroidVersion = '2.0.1'
     rxCacheVersion = '1.8.1-2.x'
     rxCacheGsonVersion = '0.0.3'
-    koin_version = "0.6.1"
+    koin_version = "0.7.1"
 
 }
