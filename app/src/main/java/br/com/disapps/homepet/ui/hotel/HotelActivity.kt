@@ -1,23 +1,19 @@
 package br.com.disapps.homepet.ui.hotel
 
-import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import br.com.disapps.homepet.R
-import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.data.model.Hotel
 import br.com.disapps.homepet.ui.common.AppActivity
 import br.com.disapps.homepet.ui.hotel.hotelFragment.HotelFragment
 import br.com.disapps.homepet.ui.hotels.adapter.ImageViewPagerAdapter
 import br.com.disapps.homepet.ui.imageViewer.ImageViewerActivity
-import br.com.disapps.homepet.ui.profile.ProfileFragment
 import br.com.disapps.homepet.util.extensions.startActivity
 import kotlinx.android.synthetic.main.activity_hotel.*
+import org.koin.android.ext.android.inject
 
 
 /**
@@ -26,12 +22,14 @@ import kotlinx.android.synthetic.main.activity_hotel.*
 
 class HotelActivity : AppActivity(), AppBarLayout.OnOffsetChangedListener, IHotelView {
 
-    private var hotelPresenter: HotelPresenter? = null
+    private val presenter by inject<HotelPresenter>()
     private var hotel: Hotel?  = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hotel)
+
+        presenter.attachView(this)
 
         setToolbar(toolbar)
         setContainer(container!!)
@@ -87,21 +85,6 @@ class HotelActivity : AppActivity(), AppBarLayout.OnOffsetChangedListener, IHote
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.hotel_menu, menu)
         return super.onCreateOptionsMenu(menu)
-    }
-
-    private val presenter: HotelPresenter
-        get() {
-
-            if (hotelPresenter == null) {
-                createPresenter()
-            }
-
-            return hotelPresenter!!
-        }
-
-    private fun createPresenter() {
-        hotelPresenter = HotelPresenter(HomePet.instance!!.hotelRepository)
-        hotelPresenter!!.attachView(this)
     }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {

@@ -3,11 +3,11 @@ package br.com.disapps.homepet.ui.comments
 import android.os.Bundle
 import android.view.View
 import br.com.disapps.homepet.R
-import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.data.model.Comment
 import br.com.disapps.homepet.ui.comments.adapter.CommentAdapter
 import br.com.disapps.homepet.ui.common.AppFragment
 import kotlinx.android.synthetic.main.fragment_comments.*
+import org.koin.android.ext.android.inject
 
 /**
  * Created by diefferson.santos on 31/08/17.
@@ -21,7 +21,10 @@ class CommentsFragment : AppFragment<ICommentsView, CommentsPresenter>(), IComme
 
     override val fragmentLayout = R.layout.fragment_comments
 
-    override fun createPresenter() = CommentsPresenter(HomePet.instance!!.hotelRepository)
+    override fun createPresenter() : CommentsPresenter{
+        val p by inject<CommentsPresenter>()
+        return p
+    }
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

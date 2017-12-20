@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import br.com.disapps.homepet.R
-import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.data.model.User
+import br.com.disapps.homepet.data.prefs.Preferences
 import br.com.disapps.homepet.ui.common.AppFragment
 import br.com.disapps.homepet.util.extensions.setCircleImageURI
-import br.com.disapps.homepet.util.extensions.setImageURICrop
 import com.snowmanlabs.imagepickercropper.PickerActivity
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import org.koin.android.ext.android.inject
 
 /**
  * Created by diefferson on 06/11/2017.
@@ -22,8 +22,10 @@ class EditProfileFragment : AppFragment<IEditProfileView, EditProfilePresenter>(
 
     private var mImageUri: Uri? = null
 
+    val preferences by inject<Preferences>()
+
     private val mUser: User by lazy {
-        HomePet.instance!!.preferences.getUser()
+        preferences.getUser()
     }
 
     companion object {
@@ -37,7 +39,10 @@ class EditProfileFragment : AppFragment<IEditProfileView, EditProfilePresenter>(
     override val fragmentLayout: Int
         get() = R.layout.fragment_edit_profile
 
-    override fun createPresenter() = EditProfilePresenter(HomePet.instance!!.restApi, HomePet.instance!!.preferences)
+    override fun createPresenter() : EditProfilePresenter{
+        val p by inject<EditProfilePresenter>()
+        return  p
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

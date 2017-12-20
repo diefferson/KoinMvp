@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import br.com.disapps.homepet.R
-import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.data.model.Hotel
 import br.com.disapps.homepet.data.ws.request.HotelsRequest
 import br.com.disapps.homepet.ui.common.AppFragment
@@ -21,7 +20,9 @@ import br.com.disapps.homepet.ui.profile.ProfileFragment
 import kotlinx.android.synthetic.main.fragment_hotels.*
 import kotlinx.android.synthetic.main.include_filter_layout.*
 import android.support.v7.widget.RecyclerView
+import br.com.disapps.homepet.data.prefs.Preferences
 import br.com.disapps.homepet.ui.login.LoginFragment
+import org.koin.android.ext.android.inject
 
 
 /**
@@ -34,6 +35,8 @@ class HotelsFragment : AppFragment<IHotelsView, HotelsPresenter>(), IHotelsView,
 
     private var mBottomSheetBehavior: BottomSheetBehavior<*>? = null
 
+    private val preferences by inject<Preferences>()
+
     var request = HotelsRequest()
 
     override val fragmentTag: String
@@ -42,7 +45,10 @@ class HotelsFragment : AppFragment<IHotelsView, HotelsPresenter>(), IHotelsView,
     override val fragmentLayout: Int
         get() = R.layout.fragment_hotels
 
-    override fun createPresenter() = HotelsPresenter(HomePet.instance!!.hotelRepository)
+    override fun createPresenter() : HotelsPresenter{
+        val p by inject<HotelsPresenter>()
+        return p
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,7 +122,7 @@ class HotelsFragment : AppFragment<IHotelsView, HotelsPresenter>(), IHotelsView,
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item!!.itemId){
             R.id.profile-> {
-                if(HomePet.instance!!.preferences.isLogged){
+                if(preferences.isLogged){
                     appActivityListener!!.replaceAndBackStackFragment(ProfileFragment.newInstance())
                 }else{
                     appActivityListener!!.replaceAndBackStackFragment(LoginFragment.newInstance())

@@ -5,9 +5,9 @@ import android.support.design.widget.Snackbar
 import android.text.TextUtils
 import android.view.View
 import br.com.disapps.homepet.R
-import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.ui.common.AppFragment
 import kotlinx.android.synthetic.main.fragment_signup.*
+import org.koin.android.ext.android.inject
 
 /**
  * Created by diefferson.santos on 31/08/17.
@@ -21,7 +21,10 @@ class SignupFragment : AppFragment<ISignUpView, SignupPresenter>(), ISignUpView 
     override val fragmentLayout: Int
         get() = R.layout.fragment_signup
 
-    override fun createPresenter() = SignupPresenter(HomePet.instance!!.restApi!!, HomePet.instance!!.preferences!!)
+    override fun createPresenter() : SignupPresenter{
+        val p by inject<SignupPresenter>()
+        return p
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

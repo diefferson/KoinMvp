@@ -77,6 +77,9 @@ dependencies {
     //BaseRecyclerViewAdapterHelper
     implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:$rootProject.baseRecyclerVersion"
 
+    //koin
+    implementation "org.koin:koin-android:$rootProject.koin_version"
+
     // Mosby Mvp
     implementation "com.hannesdorfmann.mosby3:mvp:$rootProject.mosbyVersion"
 

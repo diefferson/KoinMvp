@@ -6,15 +6,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import br.com.disapps.homepet.R
-import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.data.model.User
+import br.com.disapps.homepet.data.prefs.Preferences
 import br.com.disapps.homepet.ui.common.AppFragment
 import br.com.disapps.homepet.ui.login.LoginFragment
 import br.com.disapps.homepet.ui.profile.edit.EditProfileFragment
 import br.com.disapps.homepet.util.extensions.setCircleImageURI
-import br.com.disapps.homepet.util.extensions.setImageURICrop
-
 import kotlinx.android.synthetic.main.fragment_profile.*
+import org.koin.android.ext.android.inject
 
 /**
  * Created by diefferson.santos on 23/08/17.
@@ -22,8 +21,10 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : AppFragment<IProfileView, ProfilePresenter>(), IProfileView {
 
+    val preferences by inject<Preferences>()
+
     private val mUser: User by lazy {
-        HomePet.instance!!.preferences.getUser()
+        preferences.getUser()
     }
 
     override val fragmentTag: String
@@ -32,7 +33,10 @@ class ProfileFragment : AppFragment<IProfileView, ProfilePresenter>(), IProfileV
     override val fragmentLayout: Int
         get() = R.layout.fragment_profile
 
-    override fun createPresenter()= ProfilePresenter(HomePet.instance!!.preferences)
+    override fun createPresenter() : ProfilePresenter{
+        val p by inject<ProfilePresenter>()
+        return p
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,7 +52,7 @@ class ProfileFragment : AppFragment<IProfileView, ProfilePresenter>(), IProfileV
     override fun onResume() {
         super.onResume()
 
-        fillUser(HomePet.instance!!.preferences.getUser())
+        fillUser(preferences.getUser())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

@@ -8,6 +8,7 @@ import br.com.disapps.homepet.R
 import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.ui.common.AppFragment
 import kotlinx.android.synthetic.main.fragment_include_comment.*
+import org.koin.android.ext.android.inject
 
 /**
  * Created by diefferson on 04/10/17.
@@ -22,7 +23,10 @@ class IncludeCommentFragment: AppFragment<IIncludeCommentView, IncludeCommentPre
     override val fragmentLayout: Int
         get() = R.layout.fragment_include_comment
 
-    override fun createPresenter() =  IncludeCommentPresenter(HomePet.instance!!.restApi, HomePet.instance!!.preferences)
+    override fun createPresenter() : IncludeCommentPresenter{
+        val p by inject<IncludeCommentPresenter>()
+        return  p
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

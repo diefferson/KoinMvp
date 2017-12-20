@@ -10,11 +10,13 @@ import android.widget.TextView
 import br.com.disapps.homepet.R
 import br.com.disapps.homepet.app.HomePet
 import br.com.disapps.homepet.data.model.Hotel
+import br.com.disapps.homepet.data.prefs.Preferences
 import br.com.disapps.homepet.ui.common.AppFragment
 import br.com.disapps.homepet.ui.details.adapter.ServiceAdapter
 import br.com.disapps.homepet.ui.includeComment.IncludeCommentFragment
 import kotlinx.android.synthetic.main.fragment_hotel_details.*
 import kotlinx.android.synthetic.main.fragment_include_comment.*
+import org.koin.android.ext.android.inject
 
 /**
  * Created by diefferson.santos on 31/08/17.
@@ -30,8 +32,13 @@ class HotelDetailsFragment : AppFragment<IHotelDetailsView, HotelDetailsPresente
 
     var codeHotel : Int = 0
 
+    val preferences by inject<Preferences>()
 
-    override fun createPresenter() = HotelDetailsPresenter(HomePet.instance!!.hotelRepository, HomePet.instance!!.restApi, HomePet.instance!!.preferences)
+
+    override fun createPresenter() : HotelDetailsPresenter{
+        val p by inject<HotelDetailsPresenter>()
+        return  p
+    }
 
     override fun onResume() {
         super.onResume()
@@ -51,7 +58,7 @@ class HotelDetailsFragment : AppFragment<IHotelDetailsView, HotelDetailsPresente
     }
 
     private fun validateLogin() {
-        if (!HomePet.instance!!.preferences.isLogged) {
+        if (!preferences.isLogged) {
             rating_bt.visibility = View.INVISIBLE
             comment_bt.visibility = View.INVISIBLE
         }

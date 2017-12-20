@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_map.*
 import android.content.Intent
 import android.net.Uri
+import org.koin.android.ext.android.inject
 
 
 /**
@@ -30,7 +31,10 @@ class MapFragment : AppFragment<IMapView, MapPresenter>(), IMapView {
     override val fragmentLayout: Int
         get() = R.layout.fragment_map
 
-    override fun createPresenter()= MapPresenter(HomePet.instance!!.hotelRepository)
+    override fun createPresenter(): MapPresenter{
+        val p by inject<MapPresenter>()
+        return p
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

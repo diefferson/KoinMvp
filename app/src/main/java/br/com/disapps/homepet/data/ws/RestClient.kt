@@ -3,6 +3,7 @@ package br.com.disapps.homepet.data.ws
 import android.util.Log
 import br.com.disapps.homepet.BuildConfig
 import br.com.disapps.homepet.app.HomePet
+import br.com.disapps.homepet.data.prefs.Preferences
 import br.com.disapps.homepet.data.ws.request.RefreshTokenLoginRequest
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -18,7 +19,7 @@ import javax.net.ssl.HttpsURLConnection
 /**
 * Created by diefferson.santos on 23/08/17.
 */
-class RestClient {
+class RestClient(var preferences: Preferences) {
 
     val api: RestApi
 
@@ -67,7 +68,7 @@ class RestClient {
             //Build new request
             val builder = request.newBuilder()
 
-            val token = HomePet.instance?.preferences?.auth?.accessToken //save token of this request for future
+            val token = preferences.auth.accessToken //save token of this request for future
 
             request = builder.build() //overwrite old request
             val response = chain.proceed(request) //perform request, here original request will be executed
@@ -77,7 +78,7 @@ class RestClient {
                     //perform all 401 in sync blocks, to avoid multiply token updates
 
 
-                    val currentToken = HomePet.instance?.preferences?.auth?.accessToken //get currently stored token
+                    val currentToken = preferences.auth.accessToken //get currently stored token
 
                     if (currentToken != null && currentToken == token) { //compare current token with token that was stored before, if it was not updated - do update
 
@@ -91,8 +92,8 @@ class RestClient {
 
                     }
 
-                    if (HomePet.instance?.preferences?.authTokenWithPrefix != null) { //retry requires new auth token,
-                        setAuthHeader(builder, HomePet.instance?.preferences?.auth?.accessToken) //set auth token to updated
+                    if (preferences.authTokenWithPrefix != null) { //retry requires new auth token,
+                        setAuthHeader(builder, preferences.auth.accessToken) //set auth token to updated
                         request = builder.build()
                         return chain.proceed(request) //repeat request with new token
                     }
@@ -114,13 +115,13 @@ class RestClient {
 
                 val request =  RefreshTokenLoginRequest()
                 request.grantType = "refresh_token"
-                request.refreshToken = HomePet.instance?.preferences?.auth?.refreshToken!!
+                request.refreshToken = preferences.auth.refreshToken!!
 
                 val call = api.refreshToken(BuildConfig.clientSecret, request )
                 val refresh = call.execute()
 
                 if (refresh.isSuccessful) {
-                    HomePet.instance?.preferences?.saveAuth(refresh.body()?.content!!)
+                    preferences.saveAuth(refresh.body()?.content!!)
                 } else {
                     Log.e(RestClient::class.java.simpleName, "refresh token call failed!")
                     logout()
@@ -138,7 +139,7 @@ class RestClient {
         }
 
         private fun logout(): Int {
-            HomePet.instance?.preferences?.clearUserPrefs()
+            preferences.clearUserPrefs()
             return 0
         }
 
